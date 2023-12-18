@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>AQX Viewer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.css"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <title>Untitled Document</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="header"> Viewer for AQX-Downscaling</div>
+    <div class="mainContent">
+
+        <div class="rightSidebar">
+            <div id="map2"></div>
+        </div>
+        <div class="rightSidebar1">
+            <div id="map1"></div>
+        </div>
+        <div class="leftSidebar">
+            <div id="left-map-options1">
+                Options for Map1(Left)
+                     <div>
+                <label>Choose a variable </label>
+                <select id="variable-dropdown1" onchange="add_wms1()">
+                    <option value="" selected disabled>choose variable...</option>
+               <option value="DS_GEOSPM25">DS_GEOSPM25</option>
+                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>
+                    <option value="BC_MLPM25">BC_MLPM25</option>
+                </select>
+            </div>
+            <div>
+                <label>Choose a date </label>
+
+
+                <select id="date-dropdown1" onchange="add_wms1()">
+                    <option value="" selected disabled>choose date...</option>
+
+
+                </select>
+            </div>
+            </div>
+                        <div id="left-map-options2">
+                                            Options for Map2(Right)
+                     <div>
+                <label>Choose a variable </label>
+                <select id="variable-dropdown2" onchange="add_wms2()">
+                    <option value="" selected disabled>choose variable...</option>
+                  <option value="DS_GEOSPM25">DS_GEOSPM25</option>
+                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>
+                    <option value="BC_MLPM25">BC_MLPM25</option>
+                </select>
+            </div>
+            <div>
+                <label>Choose a date </label>
+
+
+                <select id="date-dropdown2" onchange="add_wms2()">
+                    <option value="" selected disabled>choose date...</option>
+
+
+                </select>
+            </div>
+                        </div>
+
+
+        </div>
+    </div>
+
+    <div class="footer"> This viewer is made for testing purpose.</div>
+</div>
+<script src="{% static "js/main.js" %}"></script>
+</body>
+</html>

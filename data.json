@@ -1,0 +1,10 @@
+{
+  "ALLOWED_HOSTS": ["localhost", "aqx-downscaling.servirglobal.net", "127.0.0.1"],
+  "SECRET_KEY": "'django-insecure-x=+e^@@eh7%9($_ws_sr)bqam%)1gbm%g3_5g-q#y9=f541(0^",
+  "CSRF_TRUSTED_ORIGINS":  ["https://aqx-downscaling.servirglobal.net/", "http://127.0.0.1"],
+  "ACCOUNT_DEFAULT_HTTP_PROTOCOL": "http",
+  "FILE_PATH_1": "C:\\Users\\gtondapu\\OneDrive - NASA\\Desktop\\MKAQX-Downscaling\\v1_downscaling\\OUT_DS\\",
+  "FILE_PATH_2": "C:\\Users\\gtondapu\\OneDrive - NASA\\Desktop\\MKAQX-Downscaling\\v1_downscaling\\OUT_BC\\",
+
+  "THREDDS_URL": "https://thredds.servirglobal.net/thredds"
+}
