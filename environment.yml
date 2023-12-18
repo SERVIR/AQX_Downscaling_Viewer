@@ -1,6 +1,4 @@
 name: AQXProject
 channels:
   - defaults
-dependencies:
-  -pip
 prefix: C:\ProgramData\Anaconda3\envs\AQXProject
