@@ -16,72 +16,148 @@
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"></script>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     <title>Untitled Document</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+
 </head>
 <body>
+
 <div class="wrapper">
-    <div class="header"> Viewer for AQX-Downscaling</div>
-    <div class="mainContent">
-
-        <div class="rightSidebar">
-            <div id="map2"></div>
-        </div>
-        <div class="rightSidebar1">
-            <div id="map1"></div>
-        </div>
-        <div class="leftSidebar">
-            <div id="left-map-options1">
-                Options for Map1(Left)
-                     <div>
-                <label>Choose a variable </label>
-                <select id="variable-dropdown1" onchange="add_wms1()">
-                    <option value="" selected disabled>choose variable...</option>
-               <option value="DS_GEOSPM25">DS_GEOSPM25</option>
-                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>
-                    <option value="BC_MLPM25">BC_MLPM25</option>
-                </select>
-            </div>
-            <div>
-                <label>Choose a date </label>
+    <h3 class="page-header text-center"> Viewer for AQX-Downscaling</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">First Map</h5>
+                        <div id="left-map-options1">
+                            <p class="card-text">Select Map source and Date</p>
+                            {#         <p>Select Map source and Date</p>#}
+                            <div>
+                                <select class="form-control" id="variable-dropdown1" onchange="add_wms1()">
+                                    <option value="" selected disabled>Select Datasource</option>
+                                    <option value="DS_GEOSPM25">DS_GEOSPM25</option>
+                                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>
+                                    <option value="BC_MLPM25">BC_MLPM25</option>
+                                </select>
+                            </div>
+                            <div>
+                                {#                <label>Select date </label>#}
 
 
-                <select id="date-dropdown1" onchange="add_wms1()">
-                    <option value="" selected disabled>choose date...</option>
+                                <select class="form-control mb-2" id="date-dropdown1" onchange="add_wms1()">
+                                    <option value="" selected disabled>Select date</option>
 
 
-                </select>
-            </div>
-            </div>
-                        <div id="left-map-options2">
-                                            Options for Map2(Right)
-                     <div>
-                <label>Choose a variable </label>
-                <select id="variable-dropdown2" onchange="add_wms2()">
-                    <option value="" selected disabled>choose variable...</option>
-                  <option value="DS_GEOSPM25">DS_GEOSPM25</option>
-                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>
-                    <option value="BC_MLPM25">BC_MLPM25</option>
-                </select>
-            </div>
-            <div>
-                <label>Choose a date </label>
-
-
-                <select id="date-dropdown2" onchange="add_wms2()">
-                    <option value="" selected disabled>choose date...</option>
-
-
-                </select>
-            </div>
+                                </select>
+                            </div>
                         </div>
+                        <div id="map1" style="width: 100%; height: calc(100vh - 350px);"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Compare To</h5>
+                        <div id="left-map-options2">
+
+                            <p class="card-text">Select Map source and Date</p>
+                            <div>
+                                <select class="form-control" id="variable-dropdown2" onchange="add_wms2()">
+                                    <option value="" selected disabled>Select Datasource</option>
+                                    <option value="DS_GEOSPM25">DS_GEOSPM25</option>
+                                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>
+                                    <option value="BC_MLPM25">BC_MLPM25</option>
+                                </select>
+                            </div>
+                            <div>
+                                {#                <label>Choose a date </label>#}
 
 
+                                <select class="form-control mb-2" id="date-dropdown2" onchange="add_wms2()">
+                                    <option value="" selected disabled>Select date</option>
+
+
+                                </select>
+                            </div>
+                        </div>
+                        <div id="map2" style="width: 100%; height: calc(100vh - 350px);"></div>
+
+                    </div>
+                </div>
+            </div>
         </div>
+
+        {#        <div class="rightSidebar">#}
+        {#     <div id="left-map-options2">#}
+        {#                                            Compare To#}
+        {#         <p>Select Map source and Date</p>#}
+        {#                     <div>#}
+        {#                <select id="variable-dropdown2" onchange="add_wms2()">#}
+        {#                    <option value="" selected disabled>Select Datasource</option>#}
+        {#                  <option value="DS_GEOSPM25">DS_GEOSPM25</option>#}
+        {#                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>#}
+        {#                    <option value="BC_MLPM25">BC_MLPM25</option>#}
+        {#                </select>#}
+        {#            </div>#}
+        {#            <div>#}
+        {#                <label>Choose a date </label>#}
+        {##}
+        {##}
+        {#                <select id="date-dropdown2" onchange="add_wms2()">#}
+        {#                    <option value="" selected disabled>Select date</option>#}
+        {##}
+        {##}
+        {#                </select>#}
+        {#            </div>#}
+        {#                        </div>#}
+        {#            <div id="map2"></div>#}
+        {#        </div>#}
+        {#        <div class="rightSidebar1">#}
+        {#               <div id="left-map-options1">#}
+        {#                First Map#}
+        {#         <p>Select Map source and Date</p>#}
+        {#                     <div>#}
+        {#                <select id="variable-dropdown1" onchange="add_wms1()">#}
+        {#                    <option value="" selected disabled>Select Datasource</option>#}
+        {#               <option value="DS_GEOSPM25">DS_GEOSPM25</option>#}
+        {#                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>#}
+        {#                    <option value="BC_MLPM25">BC_MLPM25</option>#}
+        {#                </select>#}
+        {#            </div>#}
+        {#            <div>#}
+        {#                <label>Select date </label>#}
+        {##}
+        {##}
+        {#                <select class="form-control" id="date-dropdown1" onchange="add_wms1()">#}
+        {#                    <option value="" selected disabled>Select date</option>#}
+        {##}
+        {##}
+        {#                </select>#}
+        {#            </div>#}
+        {#            </div>#}
+        {#            <div id="map1"></div>#}
+        {#        </div>#}
+        {#        <div class="leftSidebar">#}
+        {##}
+        {##}
+        {##}
+        {##}
+        {#        </div>#}
     </div>
 
-    <div class="footer"> This viewer is made for testing purpose.</div>
+    <div> SERVIR Science Coordination Office, Dec 2023. This viewer is intended only for testing purposes.</div>
 </div>
+<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
 <script src="{% static "js/main.js" %}"></script>
 </body>
 </html>

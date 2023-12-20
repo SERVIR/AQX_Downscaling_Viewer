@@ -3,63 +3,62 @@
     }
 body {
     font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-    background: #4E5869;
+    /*background: #4E5869;*/
     margin: 0;
     padding: 0;
     color: #000;
     height: 100%;
 }
-#map1,#map2{
-    height: 100%;
-}
-.wrapper {
-    background: #cccccc;
-    min-width: 600px;
-    height: 100%;
-    margin: 0 auto;
-}
-.header {
-    background:lightslategray;
-    color: white;
-    height: 50px;
-    text-align: center;
-}
-.footer {
-    clear:both;
-    background: lightslategray;
-    color: white;
-    height: 50px;
-}
-.mainContent {
-    width:100%;
-    background: #36C;
-    float: left;
-    margin-right: -325px;
-    height: calc(100% - 100px);
-}
-.leftSidebar {
-    width: 20%;
-    float: right;
-    background: white;
-    height:100%;
-    overflow: visible;
-}
-.rightSidebar {
-    width: 40%;
-    background: gray;
-    float:right;
-    height:100%;
-}
-.rightSidebar1 {
-    width: 40%;
-    background: gray;
-    float:right;
-    height:100%;
-}
+/*#map1,#map2{*/
+/*    height:calc(100% - 50px);*/
+/*    width: 100%;*/
+/*}*/
+/*.wrapper {*/
+/*    background: #cccccc;*/
+/*    min-width: 600px;*/
+/*    height: 100%;*/
+/*    margin: 0 auto;*/
+/*}*/
+/*.header {*/
+/*    background:lightslategray;*/
+/*    color: white;*/
+/*    height: 50px;*/
+/*    text-align: center;*/
+/*}*/
+/*.footer {*/
+/*    clear:both;*/
+/*    background: lightslategray;*/
+/*    color: white;*/
+/*    height: 50px;*/
+/*}*/
+/*.mainContent {*/
+/*    width:100%;*/
+/*    background: #36C;*/
+/*    float: left;*/
+/*    margin-right: -325px;*/
+/*    height: calc(100% - 100px);*/
+/*}*/
+/*.leftSidebar {*/
+/*    width: 20%;*/
+/*    float: right;*/
+/*    background: white;*/
+/*    height:100%;*/
+/*    overflow: visible;*/
+/*}*/
+/*.rightSidebar {*/
+/*    width: 50%;*/
+/*    background: gray;*/
+/*    float:right;*/
+/*    height:100%;*/
+/*}*/
+/*.rightSidebar1 {*/
+/*    width: 50%;*/
+/*    background: gray;*/
+/*    float:right;*/
+/*    height:100%;*/
+/*}*/
 
 #left-map-options1,#left-map-options2{
-    height: 45%;
-    background: lightgray;
-    margin: 5px;
-    /*color: white;*/
+    height:150px;
+
     }
