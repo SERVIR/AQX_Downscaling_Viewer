@@ -665,7 +665,7 @@ var rd_type=($("#date-dropdown2 option:selected").val());
 
                     div.innerHTML +=
                         labels.push(
-                            '<circle cx="70" cy="70" r="25" height="100px" width="100px" /> ' +
+                            '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
                             (categories[i] ? categories[i] : '+'));
 
                 }
