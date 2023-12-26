@@ -30,9 +30,14 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
     ts_plot_pm25 = []
     ts_plot_bcpm25 = []
     ts_plot_geospm25 = []
+    ts_plot_ds = []
+
     s_var1 = 'PM25'
     s_var2 = 'BC_MLPM25'
     s_var3 = 'GEOSPM25'
+    # s_var4 = 'DS_BC_DNN_PM25'
+    # s_var5 = 'DS_GEOSPM25'
+
 
     json_obj = {}
 
@@ -53,7 +58,7 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
         nc_fid = netCDF4.Dataset(infile, 'r',)  # Reading the netCDF file
         lis_var = nc_fid.variables
         print(s_var)
-        if "PM25" in s_var:
+        if "DS" not in s_var:
             field = nc_fid.variables[s_var][:]
             lats = nc_fid.variables['lat'][:]
             lons = nc_fid.variables['lon'][:]  # Defining the longitude array
@@ -107,15 +112,6 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
             for l in range(len(lons)):
                 if lon == lons[l]:
                     lon_idx = l
-
-            # print("nearest index of lat and lon")
-
-
-            # abslat = np.abs(lats - stn_lat)  # Finding the absolute latitude
-            # abslon = np.abs(lons - stn_lon)  # Finding the absolute longitude
-            # lat_idx = (abslat.argmin())
-            # lon_idx = (abslon.argmin())
-        #new way end
             for timestep, v in enumerate(time):
                 val = field2[lat_idx, lon_idx][timestep]
                 if np.isnan(val) == False:
@@ -155,6 +151,23 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
                     dt = datetime.strptime(dtt, '%Y-%m-%dT%H:%M:%SZ')
                     time_stamp = calendar.timegm(dt.timetuple()) * 1000
                     ts_plot_geospm25.append([time_stamp, float(val)])
+        elif "DS" in s_var:
+            field1 = nc_fid.variables[s_var][:]
+            lats = nc_fid.variables['lat'][:]
+            lons = nc_fid.variables['lon'][:]  # Defining the longitude array
+            time = nc_fid.variables['time'][:]
+            abslat = np.abs(lats - stn_lat)  # Finding the absolute latitude
+            abslon = np.abs(lons - stn_lon)  # Finding the absolute longitude
+            lat_idx = (abslat.argmin())
+            lon_idx = (abslon.argmin())
+            for timestep, v in enumerate(time):
+                val = field1[lat_idx, lon_idx][timestep]
+                if np.isnan(val) == False:
+                    dt_str = netCDF4.num2date(lis_var['time'][timestep], units=lis_var['time'].units,
+                                              calendar=lis_var['time'].calendar)
+                    test=dt_str+timedelta(hours=7)
+                    time_stamp = calendar.timegm(test.timetuple()) * 1000
+                    ts_plot_ds.append([time_stamp, float(val)])
         else:
             field = nc_fid.variables[s_var][:]
             lats = nc_fid.variables['Latitude'][:]
@@ -189,6 +202,7 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
         ts_plot_pm25.sort()
         ts_plot_bcpm25.sort()
         ts_plot_geospm25.sort()
+        ts_plot_ds.sort()
         point = [round(stn_lat, 2), round(stn_lon, 2)]
         json_obj["plot"] = ts_plot
 
@@ -197,6 +211,7 @@ def get_pt_values(s_var, geom_data, freq, run_type, run_date):
             json_obj["bc_mlpm25"] = ts_plot_bcpm25
             json_obj["geos_pm25"] = ts_plot_geospm25
             json_obj["ml_pm25"] = ts_plot_pm25
+            json_obj["ds_pm25"] = ts_plot_ds
         json_obj["geom"] = point
         # if len(ts_plot) == 0:
         #     logger.warn("The selected point has no data")
@@ -308,7 +323,6 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         data = json.load(f)
         geom_data = lon+',' + lat
         geos_pm25_data = get_pt_values(s_var, geom_data, "station", run_type, run_date)
-        print(geos_pm25_data)
         conn = psycopg2.connect(
             "dbname={0} user={1} host={2} password={3}".format(data['dbname'], data['user'],
                                                                data['host'], data['password']))
@@ -335,6 +349,7 @@ def get_pm25_data(s_var, run_type, run_date, station, lat, lon):
         pm25_data["ml_pm25"] = geos_pm25_data["ml_pm25"]
         pm25_data["bc_mlpm25"] = geos_pm25_data["bc_mlpm25"]
         pm25_data["geos_pm25"] = geos_pm25_data["geos_pm25"]
+        pm25_data["ds_pm25"] = geos_pm25_data["ds_pm25"]
         pm25_data["geom"] = geos_pm25_data["geom"]
         conn.close()
         return pm25_data

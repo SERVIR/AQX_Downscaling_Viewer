@@ -321,7 +321,8 @@ var rd_type=($("#date-dropdown1 option:selected").val());
         forecast_day1_avg, forecast_day2_avg, forecast_day3_avg, sum1 = 0, sum2 = 0, sum3 = 0;
 
                     var values = result.data["field_data"];
-                    var forecast_values = result.data["bc_mlpm25"];
+                    var forecast_values = result.data["bc_mlpm25"].length > 0 ? result.data["bc_mlpm25"] : result.data["ds_pm25"];
+
                     var firstday = rd_type;
                     console.log(rd_type);
                     var d1 = new Date(firstday);
@@ -459,8 +460,8 @@ var rd_type=($("#date-dropdown1 option:selected").val());
                             color: "blue"
                         },
                         {
-                            data: result.data["bc_mlpm25"],
-                            name: "BC MLPM25 data",//
+                            data: result.data["bc_mlpm25"].length > 0 ? result.data["bc_mlpm25"] : result.data["ds_pm25"],
+                            name:result.data["bc_mlpm25"].length > 0 ? "BC MLPM25 data":"DS data",//
                             color: "green"
                         },
                           // {
@@ -531,7 +532,7 @@ var rd_type=($("#date-dropdown1 option:selected").val());
                         zoomType: 'x',
                         events: {
                             load: function () {
-                                var label = this.renderer.label($("#run_table option:selected").val()=="geos"?"Graph dates and times are in Bangkok time":"Graph dates and times are in UTC time")
+                                var label = this.renderer.label("Graph dates and times are in Bangkok time")
                                     .css({
                                         width: '400px',
                                         fontSize: '12px'
@@ -657,7 +658,7 @@ var rd_type=($("#date-dropdown1 option:selected").val());
         //   var thirdday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + (((parseInt(rd_type.substring(6, 8)) + 2).toString().length < 2) ? ('0' + (parseInt(rd_type.substring(6, 8)) + 2)) : (parseInt(rd_type.substring(6, 8)) + 2));
         xhr.done(function (result) {
             var stations = result.stations;
-            console.log(stations.length);
+            document.getElementById("loader").style.display = "none";
             var myIcon;
             var markersLayer = L.featureGroup().addTo(map1);
             var pm25_legend = L.control({position: 'bottomright'});
@@ -754,5 +755,7 @@ var rd_type=($("#date-dropdown1 option:selected").val());
             }
 
         });
+                    document.getElementById("loader").style.display = "block";
+
 
 

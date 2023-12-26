@@ -308,7 +308,7 @@ var rd_type=($("#date-dropdown2 option:selected").val());
         forecast_day1_avg, forecast_day2_avg, forecast_day3_avg, sum1 = 0, sum2 = 0, sum3 = 0;
 
                     var values = result.data["field_data"];
-                    var forecast_values = result.data["bc_mlpm25"];
+                    var forecast_values = result.data["bc_mlpm25"].length > 0 ? result.data["bc_mlpm25"] : result.data["ds_pm25"];
                     var firstday = rd_type; //.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + rd_type.substring(6, 8);
                     var d1 = new Date(firstday);
                     var date1 = d1.toISOString().split('T')[0];
@@ -378,6 +378,33 @@ var rd_type=($("#date-dropdown2 option:selected").val());
                     $("#day2_guage2").css("color", "white");
                     $("#day3_guage2").css("background-color", "gray");
                     $("#day3_guage2").css("color", "white");
+                                              $("#day1_guage2").click(function () {
+            gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
+            document.getElementById("datevalue2").innerHTML = document.getElementById("day1_guage2").innerHTML;
+            document.getElementById("fromd2").innerHTML = document.getElementById("day1_guage2").innerHTML+" 08:30";
+            document.getElementById("tod2").innerHTML = document.getElementById("day1_guage2").innerHTML+" 23:30";
+            $(this).css("background-color", "black");
+            $("#day2_guage2").css("background-color", "gray");
+            $("#day3_guage2").css("background-color", "gray");
+        });
+        $("#day2_guage2").click(function () {
+            gen_chart(field_day2_avg < 0 ? -1 : field_day2_avg, forecast_day2_avg < 0 ? -1 : forecast_day2_avg);
+            document.getElementById("datevalue2").innerHTML = document.getElementById("day2_guage2").innerHTML;
+              document.getElementById("fromd2").innerHTML = document.getElementById("day2_guage2").innerHTML+" 02:30";
+            document.getElementById("tod2").innerHTML = document.getElementById("day2_guage2").innerHTML+" 23:30";
+            $(this).css("background-color", "black");
+            $("#day1_guage2").css("background-color", "gray");
+            $("#day3_guage2").css("background-color", "gray");
+        });
+        $("#day3_guage2").click(function () {
+            gen_chart(field_day3_avg < 0 ? -1 : field_day3_avg, forecast_day3_avg < 0 ? -1 : forecast_day3_avg);
+            document.getElementById("datevalue2").innerHTML = document.getElementById("day3_guage2").innerHTML;
+              document.getElementById("fromd2").innerHTML = document.getElementById("day3_guage2").innerHTML+" 02:30";
+            document.getElementById("tod2").innerHTML = document.getElementById("day3_guage2").innerHTML+" 23:30";
+            $(this).css("background-color", "black");
+            $("#day2_guage2").css("background-color", "gray");
+            $("#day1_guage2").css("background-color", "gray");
+        });
                 }
 
                 var arr = [];
@@ -415,8 +442,8 @@ var rd_type=($("#date-dropdown2 option:selected").val());
                             color: "blue"
                         },
                         {
-                            data: result.data["bc_mlpm25"],
-                            name: "BC MLPM25 data",//
+                            data: result.data["bc_mlpm25"].length > 0 ? result.data["bc_mlpm25"] : result.data["ds_pm25"],
+                            name:result.data["bc_mlpm25"].length > 0 ? "BC MLPM25 data":"DS data",//
                             color: "green"
                         },
                           // {
@@ -426,33 +453,7 @@ var rd_type=($("#date-dropdown2 option:selected").val());
                           //  }
                     ];
                     document.getElementById('pmlabel2').style.display="inline-table";
-                               $("#day1_guage2").click(function () {
-            gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
-            document.getElementById("datevalue2").innerHTML = document.getElementById("day1_guage2").innerHTML;
-            document.getElementById("fromd2").innerHTML = document.getElementById("day1_guage2").innerHTML+" 08:30";
-            document.getElementById("tod2").innerHTML = document.getElementById("day1_guage2").innerHTML+" 23:30";
-            $(this).css("background-color", "black");
-            $("#day2_guage2").css("background-color", "gray");
-            $("#day3_guage2").css("background-color", "gray");
-        });
-        $("#day2_guage2").click(function () {
-            gen_chart(field_day2_avg < 0 ? -1 : field_day2_avg, forecast_day2_avg < 0 ? -1 : forecast_day2_avg);
-            document.getElementById("datevalue2").innerHTML = document.getElementById("day2_guage2").innerHTML;
-              document.getElementById("fromd2").innerHTML = document.getElementById("day2_guage2").innerHTML+" 02:30";
-            document.getElementById("tod2").innerHTML = document.getElementById("day2_guage2").innerHTML+" 23:30";
-            $(this).css("background-color", "black");
-            $("#day1_guage2").css("background-color", "gray");
-            $("#day3_guage2").css("background-color", "gray");
-        });
-        $("#day3_guage2").click(function () {
-            gen_chart(field_day3_avg < 0 ? -1 : field_day3_avg, forecast_day3_avg < 0 ? -1 : forecast_day3_avg);
-            document.getElementById("datevalue2").innerHTML = document.getElementById("day3_guage2").innerHTML;
-              document.getElementById("fromd2").innerHTML = document.getElementById("day3_guage2").innerHTML+" 02:30";
-            document.getElementById("tod2").innerHTML = document.getElementById("day3_guage2").innerHTML+" 23:30";
-            $(this).css("background-color", "black");
-            $("#day2_guage2").css("background-color", "gray");
-            $("#day1_guage2").css("background-color", "gray");
-        });
+
                 } else {
 
                     document.getElementsByClassName("forpm252")[0].style.display = 'none';
@@ -514,7 +515,7 @@ var rd_type=($("#date-dropdown2 option:selected").val());
                         zoomType: 'x',
                         events: {
                             load: function () {
-                                var label = this.renderer.label($("#run_table option:selected").val()=="geos"?"Graph dates and times are in Bangkok time":"Graph dates and times are in UTC time")
+                                var label = this.renderer.label("Graph dates and times are in Bangkok time")
                                     .css({
                                         width: '400px',
                                         fontSize: '12px'
@@ -641,6 +642,8 @@ var rd_type=($("#date-dropdown2 option:selected").val());
         //   var thirdday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + (((parseInt(rd_type.substring(6, 8)) + 2).toString().length < 2) ? ('0' + (parseInt(rd_type.substring(6, 8)) + 2)) : (parseInt(rd_type.substring(6, 8)) + 2));
         xhr.done(function (result) {
             var stations = result.stations;
+                        document.getElementById("loader").style.display = "none";
+
             console.log(stations.length);
             var myIcon;
             var markersLayer = L.featureGroup().addTo(map2);
@@ -662,7 +665,7 @@ var rd_type=($("#date-dropdown2 option:selected").val());
 
                     div.innerHTML +=
                         labels.push(
-                            '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
+                            '<circle cx="70" cy="70" r="25" height="100px" width="100px" /> ' +
                             (categories[i] ? categories[i] : '+'));
 
                 }
@@ -739,3 +742,4 @@ var rd_type=($("#date-dropdown2 option:selected").val());
 
         });
 
+                        document.getElementById("loader").style.display = "block";
