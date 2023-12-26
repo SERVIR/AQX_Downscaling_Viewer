@@ -1,22 +1,14 @@
 var int_type;
-var guage_val, field_day1_avg, field_day2_avg, field_day3_avg,
-        forecast_day1_avg, forecast_day2_avg, forecast_day3_avg, sum1 = 0, sum2 = 0, sum3 = 0;
+
 var map1 = L.map('map1').setView([51.505, -0.09], 4);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map1);
 map1.panTo(new L.LatLng(13.73,100.52));
-var map2 = L.map('map2').setView([51.505, -0.09], 4);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map2);
-map2.panTo(new L.LatLng(13.73,100.52));
+
 var drawnItems1 = new L.FeatureGroup();
-var drawnItems2 = new L.FeatureGroup();
 map1.addLayer(drawnItems1);
-map2.addLayer(drawnItems2);
 
 var var_options=[];
 
@@ -34,7 +26,7 @@ function find_var_index(item,data){
             break;
         }
     }
-    return index
+    return index;
 }
 function ajax_update_database(ajax_url, ajax_data) {
     //backslash at end of url is required
@@ -63,36 +55,7 @@ function ajax_update_database(ajax_url, ajax_data) {
 
     return xhr;
 }
-//send data to database but follow this if you have files assosciated with it.
-function ajax_update_database_with_file(ajax_url, ajax_data,div_id) {
-    //backslash at end of url is required
-    if (ajax_url.substr(-1) !== "/") {
-        ajax_url = ajax_url.concat("/");
-    }
 
-    //update database
-    var xhr = jQuery.ajax({
-        url: ajax_url,
-        type: "POST",
-        data: ajax_data,
-        dataType: "json",
-        processData: false, // Don't process the files
-        contentType: false // Set content type to false as jQuery will tell the server its a query string request
-    });
-    xhr.done(function(data) {
-        if("success" in data){
-            addSuccessMessage(data['success'],div_id);
-        }else{
-            appendErrorMessage(data['error'],div_id);
-        }
-    })
-        .fail(function(xhr, status, error) {
-
-            console.log(xhr.responseText);
-
-        });
-    return xhr;
-}
    var drawControlFull1 = new L.Control.DrawPlus({
             edit: {
                 featureGroup: drawnItems1,
@@ -112,32 +75,14 @@ function ajax_update_database_with_file(ajax_url, ajax_data,div_id) {
 
             }
         });
-      var drawControlFull2 = new L.Control.DrawPlus({
-            edit: {
-                featureGroup: drawnItems2,
-                edit: false,
-            },
-            draw: {
-                polyline: false,
-                circlemarker: false,
-                rectangle: {
-                    shapeOptions: {
-                        color: '#007df3',
-                        weight: 4
-                    }
-                },
-                circle: false,
-                polygon: false,
 
-            }
-        });
 
         map1.addControl(drawControlFull1);
-        map2.addControl(drawControlFull2);
 
 var wmsLayer ="";
-var wmsLayer2 ="";
+
 function formatDate(date,character) {
+     console.log(d);
     var d = new Date(date).toISOString().slice(0, 10);
 
     if (character === "") {
@@ -188,53 +133,12 @@ function add_wms1() {
 wmsLayer.addTo(map1);
 }
 
-function add_wms2() {
-    if(wmsLayer2 !== ""){
-        map2.removeLayer(wmsLayer2);
-    }
-
-    var threddss_wms_url="";
-    if($("#variable-dropdown2").val().includes("DS")){
-             threddss_wms_url = 'https://thredds.servirglobal.net/thredds/wms/mk_aqx/downscaling_test/new_data/';
-
-    }
-    else{
-                     threddss_wms_url = 'https://thredds.servirglobal.net/thredds/wms/mk_aqx/downscaling_test/old_data/';
-
-    }
-    var run_date =formatDate($("#date-dropdown2").val(),'')+".nc";
-    // var variable = ($("#variable-dropdown option:selected").val());
-    var wmsUrl = threddss_wms_url + run_date;
-    var time =  formatDate($("#date-dropdown2").val(),'-')+"T22:30:00.000Z";
-    var style = 'boxfill/pm25';
-
-
-    var range = '0,100';
-     wmsLayer2 = L.tileLayer.wms(wmsUrl, {
-        layers: $("#variable-dropdown2").val(),
-        format: 'image/png',
-        time: time,
-        transparent: true,
-        styles: style,
-        colorscalerange: range,
-        opacity: 0.7,
-        version: '1.3.0',
-        zIndex: 100,
-        ABOVEMAXCOLOR: 'extend',
-        BELOWMINCOLOR: 'extend'
-
-    });
-
-wmsLayer2.addTo(map2);
-}
 
 $("#variable-dropdown1").onChange = function(){add_wms1();};
 
 $("#date-dropdown1").onChange = function(){add_wms1();};
 
-$("#variable-dropdown2").onChange = function(){add_wms2();};
 
-$("#date-dropdown2").onChange = function(){add_wms2();};
 
 
 
@@ -257,19 +161,9 @@ $("#date-dropdown2").onChange = function(){add_wms2();};
         el.value = opt;
         select.appendChild(el);
     }
- select = document.getElementById("date-dropdown2");
-     options =data.dates;
-
-    for(var i = 0; i < options.length; i++) {
-        var opt = options[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-    }
     });
 
-    function gen_chart(field_val, forecast_val) {
+    function gen_chart1(field_val, forecast_val) {
         var myConfig = {
             type: "gauge",
             legend: {
@@ -358,19 +252,19 @@ $("#date-dropdown2").onChange = function(){add_wms2();};
         };
 
         zingchart.render({
-            id: 'guage_chart',
+            id: 'guage_chart1',
             data: myConfig,
             height: 350,
             width: '100%'
         });
     }
 
-    get_ts = function () {
+    get_ts1 = function () {
         var interaction = int_type;
         console.log(interaction);
         if (interaction === "Station") {
             //console.log("station");
-        } else if ($("#poly-lat-lon").val() == "" && $("#point-lat-lon").val() == "" && $("#shp-lat-lon").val() == "") {
+        } else if ($("#poly-lat-lon1").val() == "" && $("#point-lat-lon1").val() == "" && $("#shp-lat-lon1").val() == "") {
             // $('.error').html('<b>No feature selected. Please create a feature using the map interaction dropdown. Plot cannot be generated without a feature.</b>');
             return false;
         } else {
@@ -381,34 +275,38 @@ $("#date-dropdown2").onChange = function(){add_wms2();};
         // var run_type = ($("#run_table option:selected").val());
         // var freq = ($("#freq_table option:selected").val());
         // var rd_type = ($("#rd_table option:selected").text());
-        var var_type = "BC_MLPM25"; //($("#variable_dropdown1 option:selected").val());
+        var var_type = ($("#variable-dropdown1 option:selected").val());
         // var z = rd_type.split('/').reverse()[0];
         // var y = ($("#date_table option:selected").val());
         // if (($("#date_table option:selected").val()) != undefined)
         //     rd_type = rd_type.replace(z, y.split('/').reverse()[0]);
         if (interaction == "Point") {
-            var geom_data = $("#point-lat-lon").val();
+            var geom_data = $("#point-lat-lon1").val();
             //console.log(geom_data);
 
         }
         else if (interaction == "Polygon") {
-            var geom_data = $("#poly-lat-lon").val();
+            var geom_data = $("#poly-lat-lon1").val();
         } else if (interaction == "Station") {
-            var geom_data = $("#station").val();
+            var geom_data = $("#station1").val();
 
 
         }
-var rd_type="20231201";
-        $("#chart-modal").modal('show');
-        $("#cube").removeClass('hidden');
-        $("#plotter").addClass('hidden');
+        console.log(geom_data);
+var rd_type=($("#date-dropdown1 option:selected").val());
+        $("#chart-modal1").modal('show');
+         // $("#chart-modal2").modal('hide');
+              var back2=document.getElementsByClassName("modal-backdrop");
+        back2[0].style.display="none";
+        $("#cube1").removeClass('hidden');
+        $("#plotter1").addClass('hidden');
         var serieses = [];
 
         var xhr = ajax_update_database("get-ts", {
-            "variable": "BC_MLPM25",//$("#variable_dropdown1 option:selected").val(),
-            "run_type": "geos",
+            "variable": $("#variable-dropdown1 option:selected").val(),
+            "run_type":$("#variable-dropdown1 option:selected").val(),
             "freq": "station",
-            "run_date":rd_type,//$("#date-dropdown1").val(),
+            "run_date":formatDate($("#date-dropdown1 option:selected").val(),''),//$("#date-dropdown1").val(),
             "interaction": interaction,
             "geom_data": geom_data
         });
@@ -419,25 +317,28 @@ var rd_type="20231201";
         xhr.done(function (result) {
             if ("success" in result) {
                 if (interaction === "Station") {
-                    console.log("jkhk");
+                    var guage_val, field_day1_avg, field_day2_avg, field_day3_avg,
+        forecast_day1_avg, forecast_day2_avg, forecast_day3_avg, sum1 = 0, sum2 = 0, sum3 = 0;
 
                     var values = result.data["field_data"];
                     var forecast_values = result.data["bc_mlpm25"];
-                    var firstday = rd_type.substring(0, 4) + '-' + rd_type.substring(4, 6) + '-' + rd_type.substring(6, 8);
+                    var firstday = rd_type;
+                    console.log(rd_type);
                     var d1 = new Date(firstday);
+                    console.log(d1);
+                    console.log(d1.toISOString())
                     var date1 = d1.toISOString().split('T')[0];
                     d1.setDate(d1.getDate() + 1);
-                    var d2 = new Date(firstday)
+                    var d2 = new Date(firstday);
                     d2.setDate(d2.getDate() + 2);
                     var secondday = d1.toISOString().split('T')[0];
-                    var thirdday = d2.toISOString().split('T')[0];
+                    var thirdday =d2.toISOString().split('T')[0];
                     // document.getElementById("firstday").innerHTML = date1;
                     // document.getElementById("secondday").innerHTML = secondday;
                     // document.getElementById("thirdday").innerHTML = thirdday;
-                    document.getElementById("day1_guage").innerHTML = date1;
-                    document.getElementById("day2_guage").innerHTML = secondday;
-                    document.getElementById("day3_guage").innerHTML = thirdday;
-                    console.log("station");
+                    document.getElementById("day1_guage1").innerHTML = date1;
+                    document.getElementById("day2_guage1").innerHTML = secondday;
+                    document.getElementById("day3_guage1").innerHTML = thirdday;
 
                     //     populateValues(values);
                     field_day1_avg = 0
@@ -472,7 +373,7 @@ var rd_type="20231201";
                         }
                         if (forecast_values[i + 8] != -1) count2 = count2 + 1;
                         sum2 = sum2 + (forecast_values[i + 8] ? forecast_values[i + 8][1] : 0);
-                        if ((i + 16) < 22 && forecast_values[i + 16] != -1) {
+                        if ((i + 16) < 22 && forecast_values[i + 16] !== -1) {
                             count3 = count3 + 1;
                             sum3 = sum3 + (forecast_values[i + 16] ? forecast_values[i + 16][1] : 0);
                         }
@@ -483,21 +384,48 @@ var rd_type="20231201";
                     forecast_day2_avg = sum2 / count2;
                     forecast_day3_avg = sum3 / count3;
 
-                    gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
-                    document.getElementById("datevalue").innerHTML = document.getElementById("day1_guage").innerHTML;
-                      document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 08:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 23:30";
-                    $("#day1_guage").css("background-color", "black");
-                    $("#day1_guage").css("color", "white");
-                    $("#day2_guage").css("background-color", "gray");
-                    $("#day2_guage").css("color", "white");
-                    $("#day3_guage").css("background-color", "gray");
-                    $("#day3_guage").css("color", "white");
+                    gen_chart1(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
+                    document.getElementById("datevalue1").innerHTML = document.getElementById("day1_guage1").innerHTML;
+                      document.getElementById("fromd1").innerHTML = document.getElementById("day1_guage1").innerHTML+" 08:30";
+            document.getElementById("tod1").innerHTML = document.getElementById("day1_guage1").innerHTML+" 23:30";
+                    $("#day1_guage1").css("background-color", "black");
+                    $("#day1_guage1").css("color", "white");
+                    $("#day2_guage1").css("background-color", "gray");
+                    $("#day2_guage1").css("color", "white");
+                    $("#day3_guage1").css("background-color", "gray");
+                    $("#day3_guage1").css("color", "white");
+                               $("#day1_guage1").click(function () {
+            gen_chart1(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
+            document.getElementById("datevalue1").innerHTML = document.getElementById("day1_guage1").innerHTML;
+            document.getElementById("fromd1").innerHTML = document.getElementById("day1_guage1").innerHTML+" 08:30";
+            document.getElementById("tod1").innerHTML = document.getElementById("day1_guage1").innerHTML+" 23:30";
+            $(this).css("background-color", "black");
+            $("#day2_guage1").css("background-color", "gray");
+            $("#day3_guage1").css("background-color", "gray");
+        });
+        $("#day2_guage1").click(function () {
+            gen_chart1(field_day2_avg < 0 ? -1 : field_day2_avg, forecast_day2_avg < 0 ? -1 : forecast_day2_avg);
+            document.getElementById("datevalue1").innerHTML = document.getElementById("day2_guage1").innerHTML;
+              document.getElementById("fromd1").innerHTML = document.getElementById("day2_guage1").innerHTML+" 02:30";
+            document.getElementById("tod1").innerHTML = document.getElementById("day2_guage1").innerHTML+" 23:30";
+            $(this).css("background-color", "black");
+            $("#day1_guage1").css("background-color", "gray");
+            $("#day3_guage1").css("background-color", "gray");
+        });
+        $("#day3_guage1").click(function () {
+            gen_chart1(field_day3_avg < 0 ? -1 : field_day3_avg, forecast_day3_avg < 0 ? -1 : forecast_day3_avg);
+            document.getElementById("datevalue1").innerHTML = document.getElementById("day3_guage1").innerHTML;
+              document.getElementById("fromd1").innerHTML = document.getElementById("day3_guage1").innerHTML+" 02:30";
+            document.getElementById("tod1").innerHTML = document.getElementById("day3_guage1").innerHTML+" 23:30";
+            $(this).css("background-color", "black");
+            $("#day2_guage1").css("background-color", "gray");
+            $("#day1_guage1").css("background-color", "gray");
+        });
+
                 }
 
                 var arr = [];
                 var title = "";
-                console.log(var_options);
                 var index = find_var_index(var_type, var_options);
                 var display_name = var_options[index]["display_name"];
                 var units = var_options[index]["units"];
@@ -506,15 +434,15 @@ var rd_type="20231201";
                 }
 
                 if (interaction == "Station") {
-                    document.getElementsByClassName("forpm25")[0].style.display = 'flex';
-                    document.getElementsByClassName("forpm25")[1].style.display = 'flex';
+                    document.getElementsByClassName("forpm251")[0].style.display = 'flex';
+                    document.getElementsByClassName("forpm251")[1].style.display = 'flex';
                     // document.getElementsByClassName("forpm25")[2].style.display = 'table';
                     // document.getElementsByClassName("forpm25")[2].style.width = 'inherit';
-                    document.getElementById("chartonly").style.width = '50%';
+                    document.getElementById("chartonly1").style.width = '50%';
                     // document.getElementById("modalchart").style.width = "70%";
-                    document.getElementById("modalchart").style.display = "contents";
-                    document.getElementById("modalchart").style.alignItems = "center";
-                    document.getElementById("modalchart").style.justifyContent = "center";
+                    document.getElementById("modalchart1").style.display = "contents";
+                    document.getElementById("modalchart1").style.alignItems = "center";
+                    document.getElementById("modalchart1").style.justifyContent = "center";
                     serieses = [
                         // {
                         //     data: result.data["ml_pm25"],
@@ -541,17 +469,17 @@ var rd_type="20231201";
                           //      color: "red"
                           //  }
                     ];
-                    document.getElementById('pmlabel').style.display="inline-table";
+                    document.getElementById('pmlabel1').style.display="inline-table";
                 } else {
 
                     document.getElementsByClassName("forpm25")[0].style.display = 'none';
                     document.getElementsByClassName("forpm25")[1].style.display = 'none';
                     //          document.getElementsByClassName("forpm25")[2].style.display = 'none';
-                    document.getElementById("chartonly").style.width = '100%';
-                    document.getElementById("modalchart").style.width = "";
-                    document.getElementById("modalchart").style.display = "";
-                    document.getElementById("modalchart").style.alignItems = "";
-                    document.getElementById("modalchart").style.justifyContent = "";
+                    document.getElementById("chartonly1").style.width = '100%';
+                    document.getElementById("modalchart1").style.width = "";
+                    document.getElementById("modalchart1").style.display = "";
+                    document.getElementById("modalchart1").style.alignItems = "";
+                    document.getElementById("modalchart1").style.justifyContent = "";
                     serieses = [{
                         data: result.data["plot"],
                         name: display_name,
@@ -561,7 +489,7 @@ var rd_type="20231201";
                             radius: 3
                         }
                     }];
-                    document.getElementById('pmlabel').style.display="none";
+                    document.getElementById('pmlabel1').style.display="none";
                 }
                 if (interaction == "Station") {
 
@@ -594,10 +522,10 @@ var rd_type="20231201";
 
                 } else {
                     arr = [];
-                    title = $("#var_table option:selected").text() + " values at " + result.data["geom"];
+                    title = $("#variable-dropdown1 option:selected").text() + " values at " + result.data["geom"];
                 }
                 $('.error').html('');
-                $('#plotter').highcharts({
+                $('#plotter1').highcharts({
                     chart: {
                         type: 'spline',
                         zoomType: 'x',
@@ -674,23 +602,22 @@ var rd_type="20231201";
                     series: serieses
 
                 });
-                $("#cube").addClass('hidden');
-                $("#plotter").removeClass('hidden');
+                $("#cube1").addClass('hidden');
+                $("#plotter1").removeClass('hidden');
 
 
             } else {
-                $("#cube").addClass('hidden');
+                $("#cube1").addClass('hidden');
                 $(".error").html('<h3>Error Processing Request.</h3>');
 
-                $('.forpm25').hide();
-                 $('#pmlabel').hide();
+                $('.forpm251').hide();
+                 $('#pmlabel1').hide();
 
             }
         });
 
 
     };
-    var selectforGIF;
    map1.on("draw:drawstart ", function (e) {
             // clear_coords();
             drawnItems1.clearLayers();
@@ -705,18 +632,17 @@ var rd_type="20231201";
             var feature = drawnItems1.toGeoJSON();
             var type = feature.features[0].geometry.type;
             int_type = type;
-            console.log(int_type);
             if (type == 'Point') {
                 // markersLayer.setZIndex(null);
                 var coords = feature["features"][0]["geometry"]["coordinates"];
-                $("#point-lat-lon").val(coords);
-                get_ts();
+                $("#point-lat-lon1").val(coords);
+                get_ts1();
 
             } else if (type == 'Polygon') {
                 // markersLayer.setZIndex(null);
                 var coords = feature["features"][0]["geometry"];
-                $("#poly-lat-lon").val(JSON.stringify(coords.coordinates[0]));
-                get_ts();
+                $("#poly-lat-lon1").val(JSON.stringify(coords.coordinates[0]));
+                get_ts1();
             }
 
         });
@@ -802,12 +728,6 @@ var rd_type="20231201";
                         });
                     }
                     var oneMarker =
-                        //
-                        //     [stations[i].lat,stations[i].lon],
-                        //  {
-                        //  	radius: 1000,
-                        //     color: color
-                        // });
 
                         L.marker([stations[i].lat, stations[i].lon], {
                             icon: myIcon
@@ -827,39 +747,12 @@ var rd_type="20231201";
 
                 var attributes = e.layer;
                 int_type = "Station";
-                $("#station").val(attributes.name + ',' + attributes.lat + ',' + attributes.lon);
+                $("#station1").val(attributes.name + ',' + attributes.lat + ',' + attributes.lon);
                 titleforst = attributes.fullname;
-                console.log(int_type);
-                get_ts();
+                get_ts1();
 
             }
 
         });
 
-                $("#day1_guage").click(function () {
-            gen_chart(field_day1_avg < 0 ? -1 : field_day1_avg, forecast_day1_avg < 0 ? -1 : forecast_day1_avg);
-            document.getElementById("datevalue").innerHTML = document.getElementById("day1_guage").innerHTML;
-            document.getElementById("fromd").innerHTML = document.getElementById("day1_guage").innerHTML+" 08:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day1_guage").innerHTML+" 23:30";
-            $(this).css("background-color", "black");
-            $("#day2_guage").css("background-color", "gray");
-            $("#day3_guage").css("background-color", "gray");
-        });
-        $("#day2_guage").click(function () {
-            gen_chart(field_day2_avg < 0 ? -1 : field_day2_avg, forecast_day2_avg < 0 ? -1 : forecast_day2_avg);
-            document.getElementById("datevalue").innerHTML = document.getElementById("day2_guage").innerHTML;
-              document.getElementById("fromd").innerHTML = document.getElementById("day2_guage").innerHTML+" 02:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day2_guage").innerHTML+" 23:30";
-            $(this).css("background-color", "black");
-            $("#day1_guage").css("background-color", "gray");
-            $("#day3_guage").css("background-color", "gray");
-        });
-        $("#day3_guage").click(function () {
-            gen_chart(field_day3_avg < 0 ? -1 : field_day3_avg, forecast_day3_avg < 0 ? -1 : forecast_day3_avg);
-            document.getElementById("datevalue").innerHTML = document.getElementById("day3_guage").innerHTML;
-              document.getElementById("fromd").innerHTML = document.getElementById("day3_guage").innerHTML+" 02:30";
-            document.getElementById("tod").innerHTML = document.getElementById("day3_guage").innerHTML+" 23:30";
-            $(this).css("background-color", "black");
-            $("#day2_guage").css("background-color", "gray");
-            $("#day1_guage").css("background-color", "gray");
-        });
+

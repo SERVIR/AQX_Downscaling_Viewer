@@ -1,3 +1,5 @@
+{%  extends "modal_map1.html" %}
+{% block content %}
 {% load static %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -12,6 +14,10 @@
           href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.min.css"/>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script src="{% static 'js/leaflet.draw-src.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/leaflet.draw-shapefile.js' %}" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.2/dist/leaflet.draw-src.css"/>
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"></script>
     <script type="text/javascript"
             src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"></script>
@@ -25,6 +31,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+    <script src="{% static 'js/highstock.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/highcharts-more.js' %}" type="text/javascript"></script>
 
 </head>
 <body>
@@ -32,14 +42,16 @@
 <div class="wrapper">
     <h3 class="page-header text-center"> Viewer for AQX-Downscaling</h3>
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-sm-6">
+                {%  include "modal_map1.html" %}
+
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">First Map</h5>
                         <div id="left-map-options1">
                             <p class="card-text">Select Map source and Date</p>
-                            {#         <p>Select Map source and Date</p>#}
                             <div>
                                 <select class="form-control" id="variable-dropdown1" onchange="add_wms1()">
                                     <option value="" selected disabled>Select Datasource</option>
@@ -49,21 +61,20 @@
                                 </select>
                             </div>
                             <div>
-                                {#                <label>Select date </label>#}
-
-
                                 <select class="form-control mb-2" id="date-dropdown1" onchange="add_wms1()">
                                     <option value="" selected disabled>Select date</option>
-
-
                                 </select>
                             </div>
                         </div>
+              <input type="text" name="point-lat-lon1" id="point-lat-lon1" hidden>
+                        <input type="text" name="poly-lat-lon1" id="poly-lat-lon1" hidden>
+                        <input type="text" name="station1" id="station1" hidden>
                         <div id="map1" style="width: 100%; height: calc(100vh - 350px);"></div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6">
+                 {%  include "modal_map2.html" %}
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Compare To</h5>
@@ -89,6 +100,9 @@
                                 </select>
                             </div>
                         </div>
+                        <input type="text" name="point-lat-lon2" id="point-lat-lon2" hidden>
+                        <input type="text" name="poly-lat-lon2" id="poly-lat-lon2" hidden>
+                        <input type="text" name="station2" id="station2" hidden>
                         <div id="map2" style="width: 100%; height: calc(100vh - 350px);"></div>
 
                     </div>
@@ -96,68 +110,17 @@
             </div>
         </div>
 
-        {#        <div class="rightSidebar">#}
-        {#     <div id="left-map-options2">#}
-        {#                                            Compare To#}
-        {#         <p>Select Map source and Date</p>#}
-        {#                     <div>#}
-        {#                <select id="variable-dropdown2" onchange="add_wms2()">#}
-        {#                    <option value="" selected disabled>Select Datasource</option>#}
-        {#                  <option value="DS_GEOSPM25">DS_GEOSPM25</option>#}
-        {#                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>#}
-        {#                    <option value="BC_MLPM25">BC_MLPM25</option>#}
-        {#                </select>#}
-        {#            </div>#}
-        {#            <div>#}
-        {#                <label>Choose a date </label>#}
-        {##}
-        {##}
-        {#                <select id="date-dropdown2" onchange="add_wms2()">#}
-        {#                    <option value="" selected disabled>Select date</option>#}
-        {##}
-        {##}
-        {#                </select>#}
-        {#            </div>#}
-        {#                        </div>#}
-        {#            <div id="map2"></div>#}
-        {#        </div>#}
-        {#        <div class="rightSidebar1">#}
-        {#               <div id="left-map-options1">#}
-        {#                First Map#}
-        {#         <p>Select Map source and Date</p>#}
-        {#                     <div>#}
-        {#                <select id="variable-dropdown1" onchange="add_wms1()">#}
-        {#                    <option value="" selected disabled>Select Datasource</option>#}
-        {#               <option value="DS_GEOSPM25">DS_GEOSPM25</option>#}
-        {#                    <option value="DS_BC_DNN_PM25">DS_BC_DNN_PM25</option>#}
-        {#                    <option value="BC_MLPM25">BC_MLPM25</option>#}
-        {#                </select>#}
-        {#            </div>#}
-        {#            <div>#}
-        {#                <label>Select date </label>#}
-        {##}
-        {##}
-        {#                <select class="form-control" id="date-dropdown1" onchange="add_wms1()">#}
-        {#                    <option value="" selected disabled>Select date</option>#}
-        {##}
-        {##}
-        {#                </select>#}
-        {#            </div>#}
-        {#            </div>#}
-        {#            <div id="map1"></div>#}
-        {#        </div>#}
-        {#        <div class="leftSidebar">#}
-        {##}
-        {##}
-        {##}
-        {##}
-        {#        </div>#}
+
     </div>
 
     <div> SERVIR Science Coordination Office, Dec 2023. This viewer is intended only for testing purposes.</div>
 </div>
+
 <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 
-<script src="{% static "js/main.js" %}"></script>
+<script src="{% static "js/map1.js" %}"></script>
+
+<script src="{% static "js/map2.js" %}"></script>
 </body>
 </html>
+{% endblock %}

@@ -1,0 +1,4 @@
+Var|Category|Display_name|units|min|max
+BC_MLPM25|geos|BC_MLPM25|mcgm-3|0|100
+PM25|geos|PM25|mcgm-3|0|100
+GEOSPM25|geos|GEOSPM25|mcgm-3|0|100

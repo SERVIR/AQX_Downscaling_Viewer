@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from aqx_downscaling.utils import get_dates
+from aqx_downscaling.utils import get_dates, get_ts, get_station_data, generate_variables_meta
 from aqx_downscaling.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',home,name='home'),
-    path('get_dates/',get_dates,name='get_dates')
+    path('get_dates/',get_dates,name='get_dates'),
+    path('get-ts/',get_ts,name='get-ts'),
+    path('get-station-data/',get_station_data,name='get-station-data'),
+    path('generate_variables_meta/',generate_variables_meta,name='generate_variables_meta'),
 ]
