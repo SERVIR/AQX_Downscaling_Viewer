@@ -92,11 +92,11 @@ function add_wms2() {
 
     var threddss_wms_url="";
     if($("#variable-dropdown2").val().includes("DS")){
-             threddss_wms_url = 'https://thredds.servirglobal.net/thredds/wms/mk_aqx/downscaling_test/new_data/';
+             threddss_wms_url = 'https://thredds.servirglobal.net/thredds/wms/mk_aqx/downscaling_test/'+$("#variable-dropdown2").val()+'/';
 
     }
     else{
-                     threddss_wms_url = 'https://thredds.servirglobal.net/thredds/wms/mk_aqx/downscaling_test/old_data/';
+                     threddss_wms_url = 'https://thredds.servirglobal.net/thredds/wms/mk_aqx/downscaling_test/'+$("#variable-dropdown2").val()+'/';
 
     }
     var run_date =formatDate($("#date-dropdown2").val(),'')+".nc";
